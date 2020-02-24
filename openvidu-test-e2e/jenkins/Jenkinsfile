@@ -1,10 +1,7 @@
 node('container') {
-  sh 'docker rm -f chrome firefox e2e  || true'
-  docker.image('selenium/standalone-chrome:latest').pull()
-  docker.image('selenium/standalone-firefox:latest').pull()
-  docker.image('selenium/standalone-chrome:latest').withRun('-p 6666:4444 --name chrome --shm-size=1g -v /opt/openvidu:/opt/openvidu') { c ->
-    sh 'rm -rf /opt/openvidu/barcode.* && wget https://github.com/OpenVidu/openvidu/raw/master/openvidu-test-e2e/docker/barcode.y4m -P /opt/openvidu'
-    sh 'rm -rf /opt/openvidu/fakeaudio.* && wget https://github.com/OpenVidu/openvidu/raw/master/openvidu-test-e2e/docker/fakeaudio.wav -P /opt/openvidu'
+  elastest(tss: ['EUS'], surefireReportsPattern: '**/target/surefire-reports/TEST-*.xml', project: env.ET_PROJECT_NAME, sut: env.SUT_ID) {
+    sh 'rm -rf /opt/openvidu/barcode.* && wget https://github.com/edujgurjc/openvidu/raw/master/openvidu-test-e2e/docker/barcode.y4m -P /opt/openvidu'
+    sh 'rm -rf /opt/openvidu/fakeaudio.* && wget https://github.com/edujgurjc/openvidu/raw/master/openvidu-test-e2e/docker/fakeaudio.wav -P /opt/openvidu'
     docker.image('selenium/standalone-firefox:latest').withRun('-p 6667:4444 --name firefox --shm-size=1g') { d ->
       def mycontainer = docker.image('openvidu/openvidu-test-e2e:$DISTRO')
       mycontainer.pull()
@@ -14,7 +11,7 @@ node('container') {
           sh 'rm -rf openvidu || true'
           sh 'rm -rf kurento-java || true'
           sh 'rm -rf /opt/openvidu/recordings/* || true'
-          sh 'git clone https://github.com/OpenVidu/openvidu.git'
+          sh 'git clone https://github.com/edujgurjc/openvidu.git'
           sh 'cd openvidu && git checkout $OPENVIDU_COMMIT'
           sh(script: '''#!/bin/bash
             if $KURENTO_JAVA_SNAPSHOT ; then

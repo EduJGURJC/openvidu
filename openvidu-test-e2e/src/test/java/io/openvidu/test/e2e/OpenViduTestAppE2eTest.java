@@ -115,7 +115,7 @@ import io.openvidu.test.browsers.utils.Unzipper;
 @Tag("e2e")
 @DisplayName("E2E tests for OpenVidu TestApp")
 @ExtendWith(SpringExtension.class)
-public class OpenViduTestAppE2eTest {
+public class OpenViduTestAppE2eTest extends ElastestBaseTest {
 
 	static String OPENVIDU_SECRET = "MY_SECRET";
 	static String OPENVIDU_URL = "https://localhost:4443/";
