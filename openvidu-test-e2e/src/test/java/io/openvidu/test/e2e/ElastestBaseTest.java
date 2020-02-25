@@ -57,8 +57,7 @@ public class ElastestBaseTest {
                 WebDriverManager.firefoxdriver().setup();
             }
         } else {
-            System.setProperty("REMOTE_URL_CHROME", eusApiURL);
-            System.setProperty("REMOTE_URL_FIREFOX", eusApiURL);
+            logger.info("Using ElasTest EUS Api url for browsers: {}", eusApiURL);
         }
     }
 
