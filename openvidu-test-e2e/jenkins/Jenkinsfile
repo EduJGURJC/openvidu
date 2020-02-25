@@ -5,8 +5,11 @@ node('container') {
 
       def mycontainer = docker.image('openvidu/openvidu-test-e2e:$DISTRO')
       mycontainer.pull()
-      mycontainer.inside("--name e2e -p 4200:4200 -p 4443:4443 -u root -e MY_UID=0 -v /var/run/docker.sock:/var/run/docker.sock:rw -v /dev/shm:/dev/shm -v /opt/openvidu:/opt/openvidu") {
+      def sutContainerName = env.ET_SUT_CONTAINER_NAME;
+      mycontainer.inside("--name ${sutContainerName} --network=elastest_elastest --expose 4200 --expose 4443 -u root -e MY_UID=0 -v /var/run/docker.sock:/var/run/docker.sock:rw -v /dev/shm:/dev/shm -v /opt/openvidu:/opt/openvidu") {
         stage('Preparation') {
+          def sutNetwork = getFirstNetwork(sutContainerName)
+          def sutIp = containerIp(sutContainerName,sutNetwork)
           sh 'rm -rf ~/.m2 || true'
           sh 'rm -rf openvidu || true'
           sh 'rm -rf kurento-java || true'
@@ -71,13 +74,15 @@ node('container') {
         }
         stage ('E2E tests') {
           try {
-            sh(script: '''#!/bin/bash
-              cd openvidu/openvidu-test-e2e && sudo mvn --batch-mode -DAPP_URL=https://172.17.0.1:4200/ -DOPENVIDU_URL=https://172.17.0.1:4443/ -DREMOTE_URL_CHROME=${ET_EUS_API} -DREMOTE_URL_FIREFOX=${ET_EUS_API} test
-              if [[ "$?" -ne 0 ]] ; then
-                echo "ERROR RUNNING TESTS"
-                cat openvidu/openvidu-server/target/openvidu-server.log
-              fi
-            '''.stripIndent())
+          	withEnv(['ET_SUT_HOST=' + sutIp]) {         
+	            sh(script: '''#!/bin/bash
+	              cd openvidu/openvidu-test-e2e && sudo mvn --batch-mode -DAPP_URL=https://${ET_SUT_HOST}:4200/ -DOPENVIDU_URL=https://172.17.0.1:4443/ -DREMOTE_URL_CHROME=${ET_EUS_API} -DREMOTE_URL_FIREFOX=${ET_EUS_API} test
+	              if [[ "$?" -ne 0 ]] ; then
+	                echo "ERROR RUNNING TESTS"
+	                cat openvidu/openvidu-server/target/openvidu-server.log
+	              fi
+	            '''.stripIndent())
+            }
           }
           finally {
             junit 'openvidu/openvidu-test-e2e/**/target/surefire-reports/TEST-*.xml'
@@ -86,4 +91,27 @@ node('container') {
         }
       }
   }
+}
+
+
+def getFirstNetwork(containerName) {
+    echo "Inside getFirstNetwork function"
+    network = sh (
+        script: "docker inspect " + containerName + " -f \"{{json .NetworkSettings.Networks}}\" | awk \"{sub(/:.*/,\\\"\\\")}1\" | awk \"{sub(/\\\"/,\\\"\\\")}1\" | awk \"{sub(/\\\"/,\\\"\\\")}1\" | awk \"{sub(/{/,\\\"\\\")}1\"",
+        returnStdout: true
+    ).trim()
+
+    echo containerName+" Network = " + network;
+    return network;
+}
+
+def containerIp(containerName, network) {
+    echo "Inside containerIp function"
+    containerIp = sh (
+        script: "docker inspect --format=\"{{.NetworkSettings.Networks." + network + ".IPAddress}}\" "+ containerName,
+        returnStdout: true
+    ).trim()
+
+    echo containerName+" IP = " + containerIp;
+    return containerIp;
 }
