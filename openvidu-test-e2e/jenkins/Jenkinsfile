@@ -6,7 +6,7 @@ node('elastest') {
       def mycontainer = docker.image('openvidu/openvidu-test-e2e:$DISTRO')
       mycontainer.pull()
       def sutContainerName = env.ET_SUT_CONTAINER_NAME;
-      mycontainer.inside("--name ${sutContainerName} --network=elastest_elastest --expose 4200 --expose 4443 -u root -e MY_UID=0 -v /var/run/docker.sock:/var/run/docker.sock:rw -v /dev/shm:/dev/shm -v /opt/openvidu:/opt/openvidu") {
+      mycontainer.inside("--name ${sutContainerName} --network=elastest_elastest --expose 4200 --expose 4443 --expose 8888 -u root -e MY_UID=0 -v /var/run/docker.sock:/var/run/docker.sock:rw -v /dev/shm:/dev/shm -v /opt/openvidu:/opt/openvidu") {
         stage('Preparation') {
           sh 'apt-get install apt-transport-https ca-certificates curl software-properties-common -y'
           sh 'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -'
@@ -67,7 +67,7 @@ node('elastest') {
 		          sh 'openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -subj "/CN=www.mydom.com/O=My Company LTD./C=US" -keyout openvidu/openvidu-testapp/dist/key.pem -out openvidu/openvidu-testapp/dist/cert.pem'  
 		          sh 'cd openvidu/openvidu-testapp/dist && http-server -S -p 4200 &> /testapp.log &'
 		          sh '/usr/bin/kurento-media-server &> /kms.log &'
-		          sh 'until $(curl --insecure --output /dev/null --silent http://127.0.0.1:8888/kurento); do echo "Waiting for KMS..."; sleep 1; done'
+		          sh 'until $(curl --insecure --output /dev/null --silent http://${ET_SUT_HOST}:8888/kurento); do echo "Waiting for KMS..."; sleep 1; done'
 		          sh(script: '''#!/bin/bash
 		            if [ "$DOCKER_RECORDING_VERSION" != "default" ]; then
 		              echo "Using custom openvidu-recording tag: $DOCKER_RECORDING_VERSION"
