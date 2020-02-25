@@ -1,4 +1,4 @@
-node('container') {
+node('elastest') {
   elastest(tss: ['EUS'], surefireReportsPattern: '**/target/surefire-reports/TEST-*.xml', project: env.ET_PROJECT_NAME) {
       sh 'rm -rf /opt/openvidu/barcode.* && wget https://github.com/edujgurjc/openvidu/raw/master/openvidu-test-e2e/docker/barcode.y4m -P /opt/openvidu'
       sh 'rm -rf /opt/openvidu/fakeaudio.* && wget https://github.com/edujgurjc/openvidu/raw/master/openvidu-test-e2e/docker/fakeaudio.wav -P /opt/openvidu'
