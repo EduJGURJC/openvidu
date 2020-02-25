@@ -8,12 +8,11 @@ node('elastest') {
       def sutContainerName = env.ET_SUT_CONTAINER_NAME;
       mycontainer.inside("--name ${sutContainerName} --network=elastest_elastest --expose 4200 --expose 4443 -u root -e MY_UID=0 -v /var/run/docker.sock:/var/run/docker.sock:rw -v /dev/shm:/dev/shm -v /opt/openvidu:/opt/openvidu") {
         stage('Preparation') {
-        
-          sh 'apt-get install apt-transport-https ca-certificates curl software-properties-common'
+          sh 'apt-get install apt-transport-https ca-certificates curl software-properties-common -y'
           sh 'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -'
           sh 'add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"'
-          sh 'apt-get update'
-          sh 'apt-get install docker-ce'
+          sh 'apt-get update -y'
+          sh 'apt-get install docker-ce -y'
           def sutNetwork = getFirstNetwork(sutContainerName)
           def sutIp = containerIp(sutContainerName,sutNetwork)
           sh 'rm -rf ~/.m2 || true'
