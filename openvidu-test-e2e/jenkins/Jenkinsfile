@@ -7,7 +7,6 @@ node('container') {
       mycontainer.pull()
       mycontainer.inside("--name e2e -p 4200:4200 -p 4443:4443 -u root -e MY_UID=0 -v /var/run/docker.sock:/var/run/docker.sock:rw -v /dev/shm:/dev/shm -v /opt/openvidu:/opt/openvidu") {
         stage('Preparation') {
-          sh 'echo ${ET_EUS_API}'
           sh 'rm -rf ~/.m2 || true'
           sh 'rm -rf openvidu || true'
           sh 'rm -rf kurento-java || true'

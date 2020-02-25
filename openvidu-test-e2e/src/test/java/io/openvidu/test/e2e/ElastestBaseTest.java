@@ -50,6 +50,8 @@ public class ElastestBaseTest {
         logger.info("Browser Type: {}", browserType);
         eusApiURL = System.getenv("ET_EUS_API");
 
+        logger.info("REMOTE_URL_CHROME {}", System.getProperty("REMOTE_URL_CHROME"));
+        logger.info("REMOTE_URL_FIREFOX{}", System.getProperty("REMOTE_URL_FIREFOX"));
         if (eusApiURL == null) {
             if (browserType == null || browserType.equals(CHROME)) {
                 WebDriverManager.chromedriver().setup();
