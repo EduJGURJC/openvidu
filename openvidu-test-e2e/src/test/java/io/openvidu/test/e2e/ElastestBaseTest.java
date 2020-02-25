@@ -51,48 +51,48 @@ public class ElastestBaseTest {
         eusApiURL = System.getenv("ET_EUS_API");
 
         logger.info("REMOTE_URL_CHROME {}", System.getProperty("REMOTE_URL_CHROME"));
-        logger.info("REMOTE_URL_FIREFOX{}", System.getProperty("REMOTE_URL_FIREFOX"));
-        if (eusApiURL == null) {
-            if (browserType == null || browserType.equals(CHROME)) {
-                WebDriverManager.chromedriver().setup();
-            } else {
-                WebDriverManager.firefoxdriver().setup();
-            }
-        } else {
-            logger.info("Using ElasTest EUS Api url for browsers: {}", eusApiURL);
-        }
+        logger.info("REMOTE_URL_FIREFOX {}", System.getProperty("REMOTE_URL_FIREFOX"));
+//        if (eusApiURL == null) {
+//            if (browserType == null || browserType.equals(CHROME)) {
+//                WebDriverManager.chromedriver().setup();
+//            } else {
+//                WebDriverManager.firefoxdriver().setup();
+//            }
+//        } else {
+//            logger.info("Using ElasTest EUS Api url for browsers: {}", eusApiURL);
+//        }
     }
 
     @BeforeEach
     public void setupTest(TestInfo info) throws MalformedURLException {
         String testName = info.getTestMethod().get().getName();
         logger.info("##### Start test: {}", testName);
-
-        if (eusApiURL == null) {
-            if (browserType == null || browserType.equals(CHROME)) {
-                driver = new ChromeDriver();
-            } else {
-                driver = new FirefoxDriver();
-            }
-        } else {
-            DesiredCapabilities caps;
-            if (browserType == null || browserType.equals(CHROME)) {
-                caps = DesiredCapabilities.chrome();
-            } else {
-                caps = DesiredCapabilities.firefox();
-            }
-
-            browserVersion = System.getProperty("browserVersion");
-            if (browserVersion != null) {
-                logger.info("Browser Version: {}", browserVersion);
-                caps.setVersion(browserVersion);
-            }
-
-            caps.setCapability("testName", testName);
-            driver = new RemoteWebDriver(new URL(eusApiURL), caps);
-        }
-
-        driver.get(sutUrl);
+//
+//        if (eusApiURL == null) {
+//            if (browserType == null || browserType.equals(CHROME)) {
+//                driver = new ChromeDriver();
+//            } else {
+//                driver = new FirefoxDriver();
+//            }
+//        } else {
+//            DesiredCapabilities caps;
+//            if (browserType == null || browserType.equals(CHROME)) {
+//                caps = DesiredCapabilities.chrome();
+//            } else {
+//                caps = DesiredCapabilities.firefox();
+//            }
+//
+//            browserVersion = System.getProperty("browserVersion");
+//            if (browserVersion != null) {
+//                logger.info("Browser Version: {}", browserVersion);
+//                caps.setVersion(browserVersion);
+//            }
+//
+//            caps.setCapability("testName", testName);
+//            driver = new RemoteWebDriver(new URL(eusApiURL), caps);
+//        }
+//
+//        driver.get(sutUrl);
     }
 
     @AfterEach
