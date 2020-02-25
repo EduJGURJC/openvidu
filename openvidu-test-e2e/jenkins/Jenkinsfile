@@ -81,7 +81,7 @@ node('elastest') {
           try {
           	withEnv(['ET_SUT_HOST=' + sutIp]) {         
 	            sh(script: '''#!/bin/bash
-	              cd openvidu/openvidu-test-e2e && sudo mvn --batch-mode -DAPP_URL=https://${ET_SUT_HOST}:4200/ -DOPENVIDU_URL=https://172.17.0.1:4443/ -DREMOTE_URL_CHROME=${ET_EUS_API} -DREMOTE_URL_FIREFOX=${ET_EUS_API} test
+	              cd openvidu/openvidu-test-e2e && sudo mvn --batch-mode -DAPP_URL=https://${ET_SUT_HOST}:4200/ -DOPENVIDU_URL=https://${ET_SUT_HOST}:4443/ -DREMOTE_URL_CHROME=${ET_EUS_API} -DREMOTE_URL_FIREFOX=${ET_EUS_API} test
 	              if [[ "$?" -ne 0 ]] ; then
 	                echo "ERROR RUNNING TESTS"
 	                cat openvidu/openvidu-server/target/openvidu-server.log
