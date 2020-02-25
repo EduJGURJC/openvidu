@@ -22,7 +22,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -30,8 +29,6 @@ import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
-
-import io.elastest.etm.model.SharedAsyncModel;
 
 public class ChromeUser extends BrowserUser {
     public ChromeUser(String userName, int timeOfWaitInSeconds, boolean runningAsRoot,
